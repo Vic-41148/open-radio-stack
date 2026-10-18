@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2026 Vic-41148
+# SPDX-License-Identifier: MIT
+
+# Research notes, raw analysis artifacts, live captures (ignored).
+
+# Personal/local working docs never publish
+*.md5
+scratch/
+mnt/
+firmware/
+lineage/
+out/
+work/
+
+# Editor
+.vscode/
+.idea/
+
+# Local browser/agent scratch from the research sessions
+.playwright-mcp/
