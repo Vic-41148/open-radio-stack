@@ -30,12 +30,13 @@ this table is a pointer, not legal advice.
 `docs/upstream-findings.md` item 1 describes a change to code that is
 `GPL-2.0-only`. A patch written against it inherits that licence, and
 `GPL-2.0-only` does not combine with `GPL-3.0-only` or with the `MIT`
-material in `tools/`. Any such patch therefore goes in `patches/` under
-its own header, never merged into the rest of the tree. The same
-applies to anything taken out of an `Apache-2.0` project.
+material in `tools/`. That patch is therefore in `patches/` under its
+own header, never merged into the rest of the tree, and the `GPL-2.0`
+text vendored for it is `LICENSES/GPL-2.0-only.txt`. The same applies
+to anything taken out of an `Apache-2.0` project.
 
-This repo's own material is `CC-BY-4.0` (prose) and `MIT` (scripts):
-see `LICENSING.md`.
+This repo's own material is `CC-BY-4.0` (prose) and `MIT` (scripts),
+and the patches in `patches/` are `GPL-2.0-only`: see `LICENSING.md`.
 
 ## Vendor names
 

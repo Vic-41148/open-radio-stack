@@ -72,6 +72,10 @@ ones) were delivered within about two seconds of the first correct
 ack, and normal MT SMS has worked since with no settings and no
 RP-ERRORs.
 
+**To apply it:** `patches/0001-sms-ack-rp-reference.patch` carries the
+same change as a commit, so `git am` into a `krazey/ims` checkout
+keeps the message and the authorship. See `patches/README.md`.
+
 Why it hid for so long: a plain "did an SMS arrive?" test passes. The
 early IMS test checked that a MESSAGE arrived and was answered
 `200 OK`, which it was. Only the *RP-level* ack was wrong, and the
@@ -124,7 +128,9 @@ been rewritten, so check each against current `main` first:
 - **`phhusson/ims`:** one thing only: the one-character compile fix
   (an unbalanced `(` that breaks the build). It is the only change that
   unblocks every downstream fork.
-- **`krazey/ims`:** item 1 as a PR (filed), items 2–4 as issues. Tiny,
-  concrete, verifiable.
+- **`krazey/ims`:** item 1 as a PR (filed), items 2 to 4 wherever the
+  project will take them. Its issue tracker is disabled and it has no
+  discussions, so that means a comment on the PR or a post where the
+  project is discussed. Tiny, concrete, verifiable.
 - Anything substantial later should be rebased onto krazey `main`
   first, so it is not re-fixing what krazey already fixed.

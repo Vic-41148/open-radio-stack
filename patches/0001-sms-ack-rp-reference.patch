@@ -1,0 +1,85 @@
+From 7c4d41907c222c38183b9886ca571035698919fe Mon Sep 17 00:00:00 2001
+From: Vic-41148 <adityashibu275898@gmail.com>
+Date: Mon, 19 Oct 2026 02:24:46 +0530
+Subject: [PATCH] ims: ack incoming SMS with the RP reference from the RP-DATA
+
+handleSms() decodes the RP-Message-Reference of the incoming RP-DATA but
+drops it when storing the pending ack, and the RP-ACK is then built from the
+framework's messageRef passed to acknowledgeSms(). That value is an internal
+tracker id, not the RP reference.
+
+On a network whose SMSC matches the ack against the reference it sent (seen
+on Airtel India, where the framework value was always 0) the SMSC answers
+RP-ERROR, the RP-DATA is never acknowledged, and it is retransmitted on a
+fixed timer while any message the SMSC sends after it queues behind the
+retry, so no MT SMS is delivered at all.
+
+Carry sms.ref with the pending ack and echo it in the RP-ACK.
+
+Tested on Airtel India: acking reference 0 drew RP-ERROR and ~5 minute
+retransmissions; acking the reference from the RP-DATA was accepted and
+seven messages queued at the SMSC were delivered immediately.
+---
+ app/src/main/java/me/phh/sip/SipSmsHandler.kt | 11 +++++++----
+ app/src/main/java/me/phh/sip/SmscAddress.kt   |  2 ++
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/app/src/main/java/me/phh/sip/SipSmsHandler.kt b/app/src/main/java/me/phh/sip/SipSmsHandler.kt
+index 807c95e..fdd950c 100644
+--- a/app/src/main/java/me/phh/sip/SipSmsHandler.kt
++++ b/app/src/main/java/me/phh/sip/SipSmsHandler.kt
+@@ -220,7 +220,7 @@ internal class SipSmsHandler(
+                 val cseq = request.headers["cseq"]!![0]
+                 val token = smsLock.withLock {
+                     val nextToken = smsToken++
+-                    smsHeadersMap[nextToken] = smsHeaders(dest, callId, cseq)
++                    smsHeadersMap[nextToken] = smsHeaders(dest, callId, cseq, sms.ref)
+                     nextToken
+                 }
+ 
+@@ -479,8 +479,6 @@ internal class SipSmsHandler(
+     }
+ 
+     fun sendSmsAck(token: Int, ref: Int, error: Boolean) {
+-        Rlog.d(tag, "sending sms ack")
+-        val body = SipSmsEncodeAck(ref.toByte())
+         val headers = smsLock.withLock { smsHeadersMap.remove(token) } ?: return
+ 
+         // Do not send ACK on framework error. Should we send an error report?
+@@ -488,6 +486,11 @@ internal class SipSmsHandler(
+             return
+         }
+ 
++        // ack with the RP reference the network sent, not the framework's
++        val ackRef = headers.rpRef.toInt() and 0xff
++        Rlog.d(tag, "sending sms ack ref=$ackRef (frameworkRef=$ref)")
++        val body = SipSmsEncodeAck(ackRef.toByte())
++
+         val securityHeaders = if (carrierSettings.ipsecSupported) {
+             """
+                 Proxy-Require: sec-agree
+@@ -518,7 +521,7 @@ internal class SipSmsHandler(
+ 
+         Rlog.d(tag, "Sending ${msg.safeLogSummary()}")
+         val writer = writerProvider()
+-        val writeLabel = "outgoing SMS ACK ref=$ref"
++        val writeLabel = "outgoing SMS ACK ref=$ackRef"
+         if (!writeSmsSipBytesWithFlush(writer, writeLabel, msg.toByteArray())) {
+             responseCallbackRemover(callId)
+             sipWriteFailureListener(writeLabel)
+diff --git a/app/src/main/java/me/phh/sip/SmscAddress.kt b/app/src/main/java/me/phh/sip/SmscAddress.kt
+index bf4c2c4..34fb9e4 100644
+--- a/app/src/main/java/me/phh/sip/SmscAddress.kt
++++ b/app/src/main/java/me/phh/sip/SmscAddress.kt
+@@ -9,6 +9,8 @@ internal data class smsHeaders(
+     val dest: String,
+     val callId: String,
+     val cseq: String,
++    // RP reference of the RP-DATA being acked, not the framework tracker id
++    val rpRef: Byte = 0,
+ )
+ 
+ internal fun decodeSmscScaPdu(raw: String?): String? {
+-- 
+2.56.0
+

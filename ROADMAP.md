@@ -25,13 +25,13 @@ Last updated: 2026-10-19.
 |---|---|---|
 | 1 | In-ROM Lineage build with the open IMS stack (the real M4) | Not started. Needs the device tree plus overlay, sepolicy and audio integration in ROM. Build against a pinned ImsStack / ImsMedia / CarrierSettings trio and record the SHAs in the build notes; the PhhIms route used on the GSI is the older one. |
 | 2 | Live QMI signalling trace of a VoLTE call | Partial. DIAG is reachable with root and static queries work, but streaming capture is silent, so the radio-side view is still missing. |
-| 3 | A second device (M6) | Not started. No public IMS work on the M52 or on SM7325 has been found; the quickest way to close this is to ask whether anyone else is on that SoC, then run `docs/porting-guide.md`. |
+| 3 | A second device (M6) | Not started. No public IMS work on the M52 or on SM7325 has been found; the quickest way to close this is to ask whether anyone else is on that SoC, then run `docs/porting-guide.md`. Start with `Simon1511`, who maintains LineageOS for all three SM7325 siblings (`m52xq`, `a52sxq`, `a73xq`), and with the contributors to `LineageOS/android_hardware_lineage_generic-ims`. |
 | 4 | VoWiFi (IWLAN/ePDG) | Not implemented in the open IMS app used here. |
 | 5 | ViLTE | Not implemented. |
 | 6 | Second carrier | Everything here is one carrier in one country. Registration behaviour is carrier-dependent. |
-| 7 | Upstream: items 2–4 of `docs/upstream-findings.md` | Unfiled. Item 1 is filed as a PR. A patch against PhhIms or krazey is GPL-2.0-only (see `NOTICES.md`), so it cannot be merged into the `tools/` tree. |
+| 7 | Upstream: items 2 to 4 of `docs/upstream-findings.md` | Unfiled. Item 1 is filed as a PR. `krazey/ims` has its issue tracker disabled, so the rest have to travel as a comment on that PR or as forum posts, which is another reason the write-up matters more than the ticket. A patch against PhhIms or krazey is GPL-2.0-only (see `NOTICES.md`), so it cannot be merged into the `tools/` tree. |
 | 8 | `phhusson/ims`: the one-character compile fix | Unfiled. It is the only change worth sending to that repo. |
-| 9 | Publish the filed RP-ACK fix so it can be applied now | Not started. It belongs in `patches/` under a GPL-2.0-only header, so a ROM builder can use it before the upstream PR merges. |
+| 9 | Publish the filed RP-ACK fix so it can be applied now | **Done**: `patches/0001-sms-ack-rp-reference.patch`, `GPL-2.0-only`, applies to `krazey/ims` `a3fec01` and to nearby revisions, so a ROM builder can use it before the upstream PR merges. |
 
 ## How this list gets shorter
 

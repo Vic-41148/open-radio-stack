@@ -11,6 +11,7 @@ Two licences, split by what a file is:
 |---|---|
 | Prose: every `*.md` file: `docs/`, `device/`, `evidence/`, `README.md`, `ROADMAP.md`, this file | `CC-BY-4.0` |
 | Scripts and machine-readable config: `tools/*.sh`, `tools/*.py`, `.gitignore`, any future `.xml`/`.json` | `MIT` |
+| Patches, which are derivative of the project they patch: `patches/*.patch` | the licence of that project: `GPL-2.0-only` today |
 
 Full texts are in `LICENSES/`. Every file also carries its own tag, so
 it stays correctly licensed when you copy it out of here:
@@ -19,6 +20,7 @@ it stays correctly licensed when you copy it out of here:
 ```
 SPDX-License-Identifier: CC-BY-4.0     markdown
 SPDX-License-Identifier: MIT           scripts, config
+SPDX-License-Identifier: GPL-2.0-only  patches
 ```
 <!-- REUSE-IgnoreEnd -->
 
@@ -49,10 +51,10 @@ a documentation fix arrives under `CC-BY-4.0` and a script fix under
 
 `docs/upstream-findings.md` describes defects found in apps that are
 `GPL-2.0-only`. A patch against such a project belongs to that project
-and must stay `GPL-2.0-only`; if patches are ever added here they live
-in `patches/` under their own headers, kept apart from the `CC-BY-4.0`
-and `MIT` material. No source from those projects is redistributed
-here: the findings describe behaviour, protocol layout and log lines.
+and stays `GPL-2.0-only`: `patches/` holds those, each with its own
+tag and `.license` sidecar, kept apart from the `CC-BY-4.0` and `MIT`
+material. No source from those projects is redistributed here: the
+findings describe behaviour, protocol layout and log lines.
 
 ## Not here
 

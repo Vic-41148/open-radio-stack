@@ -75,7 +75,8 @@ On the M52, with an open ImsService on a LineageOS 21 GSI:
    pitfalls.
 6. `docs/upstream-findings.md`: defects found in the open IMS apps,
    with the filed fix.
-7. `ROADMAP.md`: what is done, what is open.
+7. `patches/`: the filed RP-ACK fix, ready to `git am` into the IMS app.
+8. `ROADMAP.md`: what is done, what is open.
 
 ## Field checks on a rooted Samsung
 
@@ -106,7 +107,9 @@ On the M52, with an open ImsService on a LineageOS 21 GSI:
   off while bringing a stack up; keep the circuit-switched path.
 
 Documents are `CC-BY-4.0`, scripts are `MIT`: see `LICENSING.md`, and
-`NOTICES.md` for the projects this work builds on.
+`NOTICES.md` for the projects this work builds on. The files in
+`patches/` are the exception: they patch `GPL-2.0-only` code, so they
+carry that licence and stay apart from everything else here.
 
 ## Contributing
 
